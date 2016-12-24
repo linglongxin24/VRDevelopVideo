@@ -1,55 +1,89 @@
-package cn.bluemobi.dylan.vrdevelopvideo;
+#【Android VR开发】二.给用户播放一个360°全景视频
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.SeekBar;
+>VR即Virtual Reality虚拟现实。虚拟现实技术是一种可以创建和体验虚拟世界的计算机仿真系统它利用计算机生成一种模拟环境是一种多源信息融合的交互式的三维动态视景和实体行为的系统仿真使用户沉浸到该环境中。
+那么，如何在Android中去开发VR功能的APP呢？我们利用谷歌提供的开源SDK去实现一个360°全景视频的功能
 
-import com.google.vr.sdk.widgets.video.VrVideoEventListener;
-import com.google.vr.sdk.widgets.video.VrVideoView;
+![](https://github.com/linglongxin24/VRDevelopVideo/blob/master/screenshot/Screenshot_2016-12-23-16-01-13-734_VRDevelopVideo.png?raw=true)
+![](https://github.com/linglongxin24/VRDevelopVideo/blob/master/screenshot/Screenshot_2016-12-23-16-01-41-994_VRDevelopVideo.png?raw=true)
 
-import java.io.IOException;
+#一.在build.gradle中引入谷歌VR的SDK依赖
 
-public class MainActivity extends AppCompatActivity {
-    /**
-     * 播放360度全景视频的的控件
-     */
-    private VrVideoView vr_video_view;
-    /**
-     * 拖动进度的进度条
-     */
-    private SeekBar seek_bar;
-    /**
-     * 声音开关
-     */
-    private ImageButton volume_toggle;
-    /**
-     * 播放按钮
-     */
-    private ImageButton play_toggle;
+```gradle
+     compile 'com.google.vr:sdk-videowidget:1.10.0'
+```
 
-    /**
-     * 声音是否开启
-     */
-    private boolean isMuted;
-    /**
-     * 播放暂停
-     */
-    private boolean isPlay=true;
-    /**
-     * 打印调试的TAG
-     */
-    private final String TAG = "VrVideoView";
+#二.注意支持的最小SDK
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        load360Video();
-    }
+```gradle
+  minSdkVersion 19
+  targetSdkVersion 25
+```
 
+#三.界面布局文件
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="cn.bluemobi.dylan.vrdevelopvideo.MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Android开发VR360度全景视频" />
+
+    <com.google.vr.sdk.widgets.video.VrVideoView
+        android:id="@+id/vr_video_view"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"></com.google.vr.sdk.widgets.video.VrVideoView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/play_toggle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:paddingStart="0dp"
+            android:src="@drawable/pause" />
+
+        <SeekBar
+            android:id="@+id/seek_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_weight="8" />
+
+        <ImageButton
+            android:id="@+id/volume_toggle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:paddingStart="0dp"
+            android:paddingTop="4dp"
+            android:src="@drawable/volume_on" />
+    </LinearLayout>
+</LinearLayout>
+
+
+```
+
+#四.加载360°全景视频
+
+```java
     /**
      * 加载360度全景视频
      */
@@ -205,16 +239,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean isMuted() {
-        return isMuted;
-    }
+```
 
-    /**
-     * 在销毁时关闭视频，防止内存溢出
-     */
-    @Override
-    protected void onDestroy() {
-        vr_video_view.shutdown();
-        super.onDestroy();
-    }
-}
+#五.[GitHub](https://github.com/linglongxin24/VRDevelopVideo)
